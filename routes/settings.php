@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\Settings\PasswordController;
+use App\Http\Controllers\Settings\PermissionController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\RoleController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
+use App\Http\Controllers\Settings\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,4 +28,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
         ->name('two-factor.show');
+
+    // User Management Routes
+    Route::resource('settings/users', UserController::class);
+
+    // Role Management Routes
+    Route::resource('settings/roles', RoleController::class);
+
+    // Permission Management Routes
+    Route::resource('settings/permissions', PermissionController::class);
 });
