@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'log'),
+    'default' => 'smtp', // Hardcoded to bypass system env vars
 
     /*
     |--------------------------------------------------------------------------
@@ -39,12 +39,13 @@ return [
 
         'smtp' => [
             'transport' => 'smtp',
-            'scheme' => env('MAIL_SCHEME'),
-            'url' => env('MAIL_URL'),
-            'host' => env('MAIL_HOST', '127.0.0.1'),
-            'port' => env('MAIL_PORT', 2525),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
+            'scheme' => null,
+            'url' => null,
+            'host' => 'sandbox.smtp.mailtrap.io', // Hardcoded Mailtrap Sandbox
+            'port' => 2525, // Hardcoded
+            'encryption' => 'tls', // Hardcoded
+            'username' => '1aa48191f73cde', // Hardcoded Mailtrap username
+            'password' => 'a6df21ce8145c3', // Hardcoded Mailtrap password
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
@@ -111,8 +112,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => 'noreply@yourapp.com', // Hardcoded (any domain works for Mailtrap Sandbox)
+        'name' => 'Laravel', // Hardcoded
     ],
 
 ];
