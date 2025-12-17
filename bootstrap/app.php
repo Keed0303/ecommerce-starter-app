@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,7 +24,22 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        $middleware->alias([
+            'permission' => CheckPermission::class,
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->respond(function ($response, $exception, $request) {
+            if ($response->getStatusCode() === 403) {
+                return Inertia::render('errors/403', [
+                    'message' => $exception->getMessage() ?: 'You do not have permission to access this resource.',
+                ])
+                    ->toResponse($request)
+                    ->setStatusCode(403);
+            }
+
+            return $response;
+        });
     })->create();
